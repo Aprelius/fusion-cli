@@ -1,0 +1,62 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+from os.path import basename, dirname, isdir, join
+import platform
+import subprocess
+import sys
+
+def SplitPath(path):
+    return [dirname(path), basename(path)]
+
+base, name = SplitPath(__file__)
+root, base = SplitPath(SplitPath(base)[0])
+
+if base == 'fusion-cli' and name == 'fusion-cli':
+    path = join(root, base)
+    if isdir(join(path, 'fusion')):
+        sys.path.insert(0, path)
+
+
+from fusion.cli import utilities  #pylint: disable=E0401
+from fusion.cli.build import RunBuild, SetupBuildCommand  #pylint: disable=E0401
+from fusion.cli.creators import RunCreator, SetupCreator  #pylint: disable=E0401
+from fusion.cli.exceptions import InvalidRootPath  #pylint: disable=E0401
+from fusion.cli.generators import RunGenerator, SetupProjectGenerators  #pylint: disable=E0401
+from fusion.cli.install import RunInstall, SetupInstallCommand  #pylint: disable=E0401
+
+
+def main(args):
+    command = args.command
+    if command.startswith('create-'):
+        return RunCreator(command[7:], args)
+    if command == 'build':
+        return RunBuild(args)
+    if command == 'install':
+        return RunInstall(args)
+    return RunGenerator(command, args,  platform.system())
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser('fusion-cli')
+    commands = parser.add_subparsers(dest='command', help='Available commands')
+
+    parser.add_argument('--root', '-r', required=False, default=os.getcwd(),
+        help='Root path. This path will be checked for a CMakeLists.txt file ' \
+             'and an error will be thrown if it does not exist.\n' \
+             'The default root path is: %s' % os.getcwd())
+
+    SetupBuildCommand(commands)
+    SetupCreator('concept', commands)
+    SetupCreator('example', commands)
+    SetupCreator('library', commands)
+    SetupInstallCommand(commands)
+    SetupProjectGenerators(commands, platform.system())
+
+    try:
+        args = parser.parse_args()
+        if not main(args):
+            exit(1)
+    except InvalidRootPath as e:
+        print('Invalid root path: %s' % e.message)
+        exit(1)
