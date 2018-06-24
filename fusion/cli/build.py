@@ -21,6 +21,9 @@ def SetupBuildCommand(commands):
         help='Specify the concurrency for building. Only used when executing '\
             'make on a POSIX system.')
 
+    command.add_argument('--fresh', action='store_true', default=False,
+        help='Regenerate the CMake project for the build.')
+
     projectFolder = os.path.join(os.getcwd(), GetProjectFolder())
     command.add_argument('--project-path', '-p',
         dest='project',
@@ -69,11 +72,15 @@ def Make(command, projectPath):
 def RunBuild(args):
     ValidateRootPath(args.root)
 
-    if not os.path.isdir(args.project):
+    if args.fresh or not os.path.isdir(args.project):
+        isRefresh = (args.fresh and os.path.isdir(args.project))
         success = False
         if platform.system() == 'Linux':
             success = GenerateGMakeProject(args)
         if not success:
+            if isRefresh:
+                print('Failed to re-initialize CMake pipeline.')
+                return False
             raise ProjectNotInitialized(args.project)
 
     makeArgs = ['-j%d' % args.concurrency]
