@@ -1,10 +1,17 @@
-from jinja2 import Environment, FileSystemLoader
+TEMPLATE_RENDER_DISABLED = False
+try:
+    from jinja2 import Environment, FileSystemLoader
+except ImportError:
+    TEMPLATE_RENDER_DISABLED = True
+
 import os
 from os.path import dirname, join, realpath
 from .exceptions import InvalidRootPath
 
 
 def RenderTemplate(template, **context):
+    if TEMPLATE_RENDER_DISABLED:
+        raise RuntimeError('Template rendering is disabled without jinja2 installed')
     searchPath = realpath(join(dirname(__file__), 'templates'))
     loader = FileSystemLoader(searchpath=searchPath)
     env = Environment(loader=loader)
