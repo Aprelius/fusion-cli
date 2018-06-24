@@ -1,0 +1,45 @@
+cmake_minimum_required(VERSION 3.10)
+
+# Define project name
+project({{ exeName }}
+    LANGUAGES CXX
+    VERSION 0.0.1)
+
+# Project directories
+set(PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+# Declare the primary executable for the application. We declare the
+# dependencies and link in the library from the main project.
+add_executable({{ exeName }})
+
+target_include_directories({{ exeName }}
+    PUBLIC
+        ${PROJECT_INCLUDE_DIR})
+
+# Create the directory for the Header Files
+FILE(GLOB_RECURSE HEADERS ${PROJECT_INCLUDE_DIR} "include/*.h")
+# Create the directory for the Source files
+FILE(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR} "src/*.cpp")
+
+# Declare the target source files. We define them as PRIVATE
+# so that when we export the target it does not line up with
+# potential interface exports.
+target_sources({{ exeName }}
+    PRIVATE
+        ${HEADERS} ${SOURCES})
+
+# Link all libraries against the target. By default we only
+# link against fusion::base and then it is a public link.
+target_link_libraries({{ exeName }}
+    PUBLIC
+        fusion::base)
+
+if(MSVC)
+    # Add this to the Executable Folder it will be a stand-alone project
+    # but should remain separate from the rest of the systems.
+    set_property(TARGET {{ exeName }} PROPERTY FOLDER "Executables")
+
+    source_group("Header Files" FILES ${HEADERS})
+    source_group("Source Files" FILES ${SOURCES})
+endif()

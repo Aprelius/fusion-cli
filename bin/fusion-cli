@@ -47,8 +47,7 @@ if __name__ == '__main__':
              'The default root path is: %s' % os.getcwd())
 
     SetupBuildCommand(commands)
-    SetupCreator('concept', commands)
-    SetupCreator('example', commands)
+    SetupCreator('executable', commands)
     SetupCreator('library', commands)
     SetupInstallCommand(commands)
     SetupProjectGenerators(commands, platform.system())

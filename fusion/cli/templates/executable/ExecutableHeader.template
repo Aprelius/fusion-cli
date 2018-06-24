@@ -1,0 +1,6 @@
+#pragma once
+
+namespace fusion {
+namespace example {
+}  // namespace example
+}  // namespace fusion
