@@ -8,6 +8,14 @@ def DefaultArgs(makeArgs, args):
     makeArgs.append(Definition('CMAKE_EXPORT_COMPILE_COMMANDS', 'ON'))
     makeArgs.append(Definition('CMAKE_BUILD_TYPE', args.variant))
 
+    if hasattr(args, 'toolchain'):
+        toolchainFolder = os.path.join(os.getcwd(), 'cmake', 'toolchains')
+        toolchain = args.toolchain
+        if not toolchain.endswith('.cmake'):
+            toolchain += '.cmake'
+        makeArgs.append(Definition('CMAKE_TOOLCHAIN_FILE',
+            os.path.join(toolchainFolder, toolchain)))
+
     installFolder = os.path.join(os.getcwd(), GetInstallFolder())
     makeArgs.append(
         Definition('CMAKE_INSTALL_PREFIX',
