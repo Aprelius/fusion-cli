@@ -1,5 +1,15 @@
+from jinja2 import Environment, FileSystemLoader
 import os
+from os.path import dirname, join, realpath
 from .exceptions import InvalidRootPath
+
+
+def RenderTemplate(template, **context):
+    searchPath = realpath(join(dirname(__file__), 'templates'))
+    loader = FileSystemLoader(searchpath=searchPath)
+    env = Environment(loader=loader)
+    template = env.get_template(template)
+    return template.render(**context)
 
 
 def ValidateRootPath(path):
