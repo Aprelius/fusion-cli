@@ -61,6 +61,8 @@ def Make(command, projectPath):
                 break
             for line in iter(process.stdout.readline, b''):
                 print(line.strip())
+    except KeyboardInterrupt:
+        pass
     except OSError:
         raise
 
