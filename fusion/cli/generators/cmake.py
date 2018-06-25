@@ -7,6 +7,7 @@ from ..config import GetBuildFolder, GetInstallFolder
 def DefaultArgs(makeArgs, args):
     makeArgs.append(Definition('CMAKE_EXPORT_COMPILE_COMMANDS', 'ON'))
     makeArgs.append(Definition('CMAKE_BUILD_TYPE', args.variant))
+    makeArgs.append(Definition('FUSION_BUILD_ARCH', args.arch))
 
     if hasattr(args, 'toolchain') and args.toolchain is not None:
         toolchainFolder = os.path.join(os.getcwd(), 'cmake', 'toolchains')
