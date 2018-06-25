@@ -1,7 +1,7 @@
 import os
 import platform
 import subprocess
-from .config import DefaultArchitecture, DefaultVariant, \
+from .config import DefaultArchitecture, DefaultCompiler, DefaultVariant, \
     GetProjectFolder, GetSupportedArchitectures, GetSupportedVariants
 from .exceptions import ProjectNotInitialized
 from .generators import GenerateGMakeProject
@@ -36,7 +36,10 @@ def SetupBuildCommand(commands):
         choices=list(GetSupportedVariants()),
         default=DefaultVariant(),
         help='Specify the variant to build. Default: %s' % DefaultVariant())
-    command.add_argument('--toolchain', '-t', required=False)
+    command.add_argument('--toolchain', '-t', required=False,
+        default=DefaultCompiler(platform.system()),
+        help='Toolchain to build the project with.\n' \
+             'Default toolchain is: %s' % DefaultCompiler(platform.system()))
     command.add_argument('--verbose', action='store_true', default=False,
         help='Trigger verbose logging during the build process.')
     return command

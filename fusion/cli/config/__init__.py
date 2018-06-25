@@ -2,6 +2,12 @@ def DefaultArchitecture():
     return 'x86_64'
 
 
+def DefaultCompiler(system):
+    if system == 'Linux':
+        return 'gcc'
+    raise RuntimeError('Unknown platform: %s' % system)
+
+
 def DefaultVariant():
     return 'Debug'
 

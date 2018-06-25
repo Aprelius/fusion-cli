@@ -1,6 +1,6 @@
 import os
 import platform
-from ..config import DefaultArchitecture, DefaultVariant, \
+from ..config import DefaultArchitecture, DefaultCompiler, DefaultVariant, \
     GetBuildFolder, GetInstallFolder, GetProjectFolder, \
     GetSupportedArchitectures, GetSupportedVariants
 
@@ -41,5 +41,8 @@ def BaseProjectGenerator(commands, *args, **kwargs):
         default=DefaultVariant(),
         choices=GetSupportedVariants(),
         help='Specify the variant type of the build. Default is: debug.')
-    command.add_argument('--toolchain', '-t', required=False)
+    command.add_argument('--toolchain', '-t', required=False,
+        default=DefaultCompiler(platform.system()),
+        help='Toolchain to build the project with.\n' \
+             'Default toolchain is: %s' % DefaultCompiler(platform.system()))
     return command
