@@ -5,6 +5,7 @@ from .config import DefaultArchitecture, DefaultCompiler, DefaultVariant, \
     GetProjectFolder, GetSupportedArchitectures, GetSupportedVariants
 from .exceptions import ProjectNotInitialized
 from .generators import GenerateGMakeProject
+from .generators.gmake import ProjectPath
 from .utilities import ValidateRootPath
 
 
@@ -77,8 +78,10 @@ def Make(command, projectPath):
 def RunBuild(args):
     ValidateRootPath(args.root)
 
-    if args.fresh or not os.path.isdir(args.project):
-        isRefresh = (args.fresh and os.path.isdir(args.project))
+    projectPath = ProjectPath(args, args.project)
+
+    if args.fresh or not os.path.isdir(projectPath):
+        isRefresh = (args.fresh and os.path.isdir(projectPath))
         success = False
         if platform.system() == 'Linux':
             success = GenerateGMakeProject(args)
@@ -86,9 +89,9 @@ def RunBuild(args):
             if isRefresh:
                 print('Failed to re-initialize CMake pipeline.')
                 return False
-            raise ProjectNotInitialized(args.project)
+            raise ProjectNotInitialized(projectPath)
 
     makeArgs = ['-j%d' % args.concurrency]
     if args.verbose:
         makeArgs.append('VERBOSE=1')
-    return Make(makeArgs, args.project)
+    return Make(makeArgs, projectPath)

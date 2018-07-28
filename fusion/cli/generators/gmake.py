@@ -1,4 +1,5 @@
 import os
+import platform
 from .base import BaseProjectGenerator
 from .cmake import DefaultArgs, Execute
 from ..config import GetProjectFolder
@@ -9,11 +10,30 @@ def SetupGmakeProjectGenerator(commands):
         help='Generate the generic Unix makefiles.')
     return command
 
+
+def ProjectPath(args, basePath=None):
+    projectPath = '%(platform)s-%(arch)s-%(toolchain)s-%(variant)s' % dict(
+        platform=str(platform.system()).lower(),
+        arch=args.arch,
+        toolchain=getattr(args, 'toolchain', 'unknown').lower(),
+        variant=str(args.variant).lower())
+
+    if basePath is None:
+        return projectPath
+    return os.path.join(basePath, projectPath)
+
+
 def GenerateGMakeProject(args):
     if not os.path.isdir(args.project):
         os.mkdir(args.project)
 
+    projectPath = ProjectPath(args, args.project)
+    print('projectPath=%s'%projectPath)
+
+    if not os.path.isdir(projectPath):
+        os.mkdir(projectPath)
+
     cmakeArgs = DefaultArgs(['-G', 'Unix Makefiles'], args)
     cmakeArgs.append(args.root)
 
-    return Execute(cmakeArgs, args.project)
+    return Execute(cmakeArgs, projectPath)
