@@ -1,9 +1,10 @@
 import os
 import platform
+import shutil
 import subprocess
 from .config import DefaultArchitecture, DefaultCompiler, DefaultVariant, \
     GetProjectFolder, GetSupportedArchitectures, GetSupportedVariants
-from .exceptions import ProjectNotInitialized
+from .exceptions import InvalidRootPath, ProjectNotInitialized
 from .generators import GenerateGMakeProject
 from .generators.gmake import ProjectPath
 from .utilities import ValidateRootPath
@@ -43,6 +44,9 @@ def SetupBuildCommand(commands):
              'Default toolchain is: %s' % DefaultCompiler(platform.system()))
     command.add_argument('--verbose', action='store_true', default=False,
         help='Trigger verbose logging during the build process.')
+
+    command.add_argument('--defintion', '-D', dest='definitions', action='append',
+        help='Add a definition which will be passed to the CMake generator.')
     return command
 
 
@@ -79,17 +83,26 @@ def RunBuild(args):
     ValidateRootPath(args.root)
 
     projectPath = ProjectPath(args, args.project)
+    isRefresh = (args.fresh or os.path.isdir(projectPath))
 
-    if args.fresh or not os.path.isdir(projectPath):
-        isRefresh = (args.fresh and os.path.isdir(projectPath))
-        success = False
-        if platform.system() == 'Linux':
-            success = GenerateGMakeProject(args)
-        if not success:
-            if isRefresh:
-                print('Failed to re-initialize CMake pipeline.')
-                return False
-            raise ProjectNotInitialized(projectPath)
+    if args.fresh:
+        try:
+            if os.path.isdir(projectPath):
+                shutil.rmtree(projectPath)
+        except (IOError, OSError):
+            print('Failed to clean project path')
+            return False
+        if os.path.isdir(projectPath):
+            raise InvalidRootPath()
+
+    success = False
+    if platform.system() == 'Linux':
+        success = GenerateGMakeProject(args)
+    if not success:
+        if isRefresh:
+            print('Failed to re-initialize CMake pipeline.')
+            return False
+        raise ProjectNotInitialized(projectPath)
 
     makeArgs = ['-j%d' % args.concurrency]
     if args.verbose:

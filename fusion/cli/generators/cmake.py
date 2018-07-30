@@ -26,6 +26,11 @@ def DefaultArgs(makeArgs, args):
     makeArgs.append(
         Definition('FUSION_BUILD_ROOT',
             getattr(args, 'build', buildFolder)))
+
+    if hasattr(args, 'definitions') and args.definitions:
+        for define in args.definitions:
+            [key, value] = SplitDefintion(define)
+            makeArgs.append(Definition(key.upper(), value))
     return makeArgs
 
 
@@ -61,3 +66,12 @@ def Execute(command, projectPath):
 
     print('CMake run failed with result code: %s' % returncode)
     return False
+
+
+def SplitDefintion(key):
+    value = 1
+    try:
+        key, value = key.strip().split('=')
+    except ValueError:
+        pass
+    return [key , value]

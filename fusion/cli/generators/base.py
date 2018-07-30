@@ -45,4 +45,7 @@ def BaseProjectGenerator(commands, *args, **kwargs):
         default=DefaultCompiler(platform.system()),
         help='Toolchain to build the project with.\n' \
              'Default toolchain is: %s' % DefaultCompiler(platform.system()))
+
+    command.add_argument('--defintion', '-D_', dest='definitions', action='append',
+        help='Add a definition which will be passed to the CMake generator.')
     return command
