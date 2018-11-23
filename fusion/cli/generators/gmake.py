@@ -28,12 +28,12 @@ def GenerateGMakeProject(args):
         os.mkdir(args.project)
 
     projectPath = ProjectPath(args, args.project)
-    print('projectPath=%s'%projectPath)
 
     if not os.path.isdir(projectPath):
         os.mkdir(projectPath)
 
-    cmakeArgs = DefaultArgs(['-G', 'Unix Makefiles'], args)
+    cmakeArgs = DefaultArgs([], args)
+    cmakeArgs.extend(['-G', 'Unix Makefiles'])
     cmakeArgs.append(args.root)
 
     return Execute(cmakeArgs, projectPath)

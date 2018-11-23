@@ -86,6 +86,7 @@ def RunBuild(args):
     isRefresh = (args.fresh or os.path.isdir(projectPath))
 
     if args.fresh:
+        print('Fusion-CLI: Cleaning out project for fresh CMake run.')
         try:
             if os.path.isdir(projectPath):
                 shutil.rmtree(projectPath)

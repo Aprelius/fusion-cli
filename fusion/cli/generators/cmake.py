@@ -31,6 +31,7 @@ def DefaultArgs(makeArgs, args):
         for define in args.definitions:
             [key, value] = SplitDefintion(define)
             makeArgs.append(Definition(key.upper(), value))
+
     return makeArgs
 
 
@@ -74,4 +75,4 @@ def SplitDefintion(key):
         key, value = key.strip().split('=')
     except ValueError:
         pass
-    return [key , value]
+    return [key, value]
