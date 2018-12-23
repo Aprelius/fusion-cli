@@ -4,6 +4,7 @@ import shutil
 import subprocess
 from .config import DefaultArchitecture, DefaultCompiler, DefaultVariant, \
     GetProjectFolder, GetSupportedArchitectures, GetSupportedVariants
+from .docker import RunAsContainer
 from .exceptions import InvalidRootPath, ProjectNotInitialized
 from .generators import GenerateGMakeProject
 from .generators.gmake import ProjectPath
@@ -22,6 +23,9 @@ def SetupBuildCommand(commands):
         required=False,
         help='Specify the concurrency for building. Only used when executing '\
             'make on a POSIX system.')
+
+    command.add_argument('--container', '-C', required=False,
+        help='Target docker container to use for build if specified.')
 
     command.add_argument('--fresh', action='store_true', default=False,
         help='Regenerate the CMake project for the build.')
@@ -66,6 +70,9 @@ def Make(command, projectPath, executor):
 
 def RunBuild(args):
     ValidateRootPath(args.root)
+
+    if args.container:
+        return RunAsContainer(args, args.command)
 
     projectPath = ProjectPath(args, args.project)
     isRefresh = (args.fresh or os.path.isdir(projectPath))

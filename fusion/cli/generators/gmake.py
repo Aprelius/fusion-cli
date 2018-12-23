@@ -3,6 +3,7 @@ import platform
 from .base import BaseProjectGenerator
 from .cmake import DefaultArgs, CMake
 from ..config import GetProjectFolder
+from ..docker import RunAsContainer
 from ..utilities import Execute
 
 
@@ -32,6 +33,9 @@ def GenerateGMakeProject(args):
 
     if not os.path.isdir(projectPath):
         os.mkdir(projectPath)
+
+    if args.container:
+        return RunAsContainer(args, args.command)
 
     cmakeArgs = DefaultArgs([], args)
     cmakeArgs.extend(['-G', 'Unix Makefiles'])

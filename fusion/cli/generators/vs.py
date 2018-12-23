@@ -2,6 +2,7 @@ import platform
 from .base import BaseProjectGenerator
 from .cmake import DefaultArgs, CMake
 from ..config import GetSupportedArchitectures
+from ..docker import RunAsContainer
 from ..utilities import Execute
 
 def SetupVSProjectGenerator(commands, *args, **kwargs):
@@ -21,6 +22,9 @@ def DetermineMachineType(machine=None):
 
 
 def GenerateVSProject(args):
+    if args.container:
+        return RunAsContainer(args, args.command)
+
     architectures = {
         'x86_64': 'Win64',
         'i386': 'Win32'

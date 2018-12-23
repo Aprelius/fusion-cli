@@ -20,6 +20,9 @@ def BaseProjectGenerator(commands, *args, **kwargs):
         help='Specify the build path for compiled artifacts.\n' \
              'The default build path is: %s' % buildFolder)
 
+    command.add_argument('--container', '-C', required=False,
+        help='Target docker container to use for build if specified.')
+
     installFolder = os.path.join(os.getcwd(), GetInstallFolder())
     command.add_argument('--install-path', '-i',
         dest='install',
