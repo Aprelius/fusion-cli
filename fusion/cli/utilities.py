@@ -6,7 +6,20 @@ except ImportError:
 
 import os
 from os.path import dirname, join, realpath
+import platform
+import subprocess
 from .exceptions import InvalidRootPath
+
+
+def Call(command):
+    try:
+        output = subprocess.check_output(command)
+    except subprocess.CalledProcessError:
+        return False, ''
+    except OSError:
+        raise
+    return True, output.strip()
+
 
 def Execute(command, workingDirectory):
     if platform.system() == 'Windows':
