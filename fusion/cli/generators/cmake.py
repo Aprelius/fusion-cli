@@ -42,28 +42,15 @@ def Definition(variable, value, type=None):
         value=str(value))
 
 
-def Execute(command, projectPath):
+def CMake(command, projectPath, executor):
     command.insert(0, 'cmake')
 
     print('Using project folder: %s' % projectPath)
     print('Executing CMake command: %s' % ' '.join(command))
 
-    if platform.system() == 'Windows':
-        command = ' '.join(command)
-    try:
-        process = subprocess.Popen(command,
-            cwd=projectPath, stdout=subprocess.PIPE, bufsize=1)
-        while True:
-            if process.poll() is not None:
-                break
-            for line in iter(process.stdout.readline, b''):
-                print(line.strip())
-    except OSError:
-        raise
-
-    returncode = process.poll()
+    returncode = executor(command, projectPath)
     if returncode == 0:
-       return True
+        return True
 
     print('CMake run failed with result code: %s' % returncode)
     return False

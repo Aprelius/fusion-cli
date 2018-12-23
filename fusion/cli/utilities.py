@@ -8,6 +8,25 @@ import os
 from os.path import dirname, join, realpath
 from .exceptions import InvalidRootPath
 
+def Execute(command, workingDirectory):
+    if platform.system() == 'Windows':
+        command = ' '.join(command)
+    try:
+        process = subprocess.Popen(command,
+            cwd=workingDirectory, stdout=subprocess.PIPE, bufsize=1)
+        while True:
+            if process.poll() is not None:
+                break
+            for line in iter(process.stdout.readline, b''):
+                if len(line.strip()) > 0:
+                    print(line.strip())
+    except KeyboardInterrupt:
+        pass
+    except OSError:
+        raise
+
+    return process.poll()
+
 
 def RenderTemplate(template, **context):
     if TEMPLATE_RENDER_DISABLED:

@@ -1,8 +1,9 @@
 import os
 import platform
 from .base import BaseProjectGenerator
-from .cmake import DefaultArgs, Execute
+from .cmake import DefaultArgs, CMake
 from ..config import GetProjectFolder
+from ..utilities import Execute
 
 
 def SetupGmakeProjectGenerator(commands):
@@ -36,4 +37,4 @@ def GenerateGMakeProject(args):
     cmakeArgs.extend(['-G', 'Unix Makefiles'])
     cmakeArgs.append(args.root)
 
-    return Execute(cmakeArgs, projectPath)
+    return CMake(cmakeArgs, projectPath, Execute)

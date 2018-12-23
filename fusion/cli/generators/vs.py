@@ -1,8 +1,8 @@
 import platform
 from .base import BaseProjectGenerator
-from .cmake import DefaultArgs, Execute
+from .cmake import DefaultArgs, CMake
 from ..config import GetSupportedArchitectures
-
+from ..utilities import Execute
 
 def SetupVSProjectGenerator(commands, *args, **kwargs):
     command = BaseProjectGenerator(commands, *args, **kwargs)
@@ -47,4 +47,4 @@ def GenerateVSProject(args):
     cmakeArgs = DefaultArgs(['-G', '"%s"' % version], args)
     cmakeArgs.append(args.root)
 
-    return Execute(cmakeArgs, args.project)
+    return CMake(cmakeArgs, args.project, Execute)

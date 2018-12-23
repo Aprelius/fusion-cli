@@ -7,7 +7,7 @@ from .config import DefaultArchitecture, DefaultCompiler, DefaultVariant, \
 from .exceptions import InvalidRootPath, ProjectNotInitialized
 from .generators import GenerateGMakeProject
 from .generators.gmake import ProjectPath
-from .utilities import ValidateRootPath
+from .utilities import Execute, ValidateRootPath
 
 
 def SetupBuildCommand(commands):
@@ -50,30 +50,15 @@ def SetupBuildCommand(commands):
     return command
 
 
-def Make(command, projectPath):
+def Make(command, projectPath, executor):
     command.insert(0, 'make')
 
     print('Using project folder: %s' % projectPath)
     print('Executing Make command: %s' % ' '.join(command))
 
-    if platform.system() == 'Windows':
-        command = ' '.join(command)
-    try:
-        process = subprocess.Popen(command,
-            cwd=projectPath, stdout=subprocess.PIPE, bufsize=1)
-        while True:
-            if process.poll() is not None:
-                break
-            for line in iter(process.stdout.readline, b''):
-                print(line.strip())
-    except KeyboardInterrupt:
-        pass
-    except OSError:
-        raise
-
-    returncode = process.poll()
+    returncode = executor(command, projectPath)
     if returncode == 0:
-       return True
+        return True
 
     print('Make run failed with result code: %s' % returncode)
     return False
@@ -108,4 +93,5 @@ def RunBuild(args):
     makeArgs = ['-j%d' % args.concurrency]
     if args.verbose:
         makeArgs.append('VERBOSE=1')
-    return Make(makeArgs, projectPath)
+
+    return Make(makeArgs, projectPath, Execute)
