@@ -21,6 +21,7 @@ if base == 'fusion-cli' and name == 'fusion-cli':
 
 from fusion.cli import utilities  #pylint: disable=E0401
 from fusion.cli.build import RunBuild, SetupBuildCommand  #pylint: disable=E0401
+from fusion.cli.matrix import RunBuildMatrix, SetupBuildMatrixCommand  #pylint: disable=E0401
 from fusion.cli.creators import RunCreator, SetupCreator  #pylint: disable=E0401
 from fusion.cli.exceptions import InvalidRootPath  #pylint: disable=E0401
 from fusion.cli.generators import RunGenerator, SetupProjectGenerators  #pylint: disable=E0401
@@ -33,6 +34,8 @@ def main(args):
         return RunCreator(command[7:], args)
     if command == 'build':
         return RunBuild(args)
+    if command == 'build-matrix':
+        return RunBuildMatrix(args)
     if command == 'install':
         return RunInstall(args)
     return RunGenerator(command, args,  platform.system())
@@ -47,6 +50,7 @@ if __name__ == '__main__':
              'The default root path is: %s' % os.getcwd())
 
     SetupBuildCommand(commands)
+    SetupBuildMatrixCommand(commands)
     SetupCreator('executable', commands)
     SetupCreator('library', commands)
     SetupInstallCommand(commands)

@@ -10,6 +10,14 @@ class InvalidRootPath(FusionCliException):
     message = 'The root path is invalid.'
 
 
+class MatrixError(FusionCliException):
+    message = 'Failed to execute the matrix configuration'
+
+
+class MatrixValidationError(MatrixError):
+    message = 'Failed to validate the matrix'
+
+
 class ProjectNotInitialized(FusionCliException):
     message = "Project path '%s' was not initialized."
 
