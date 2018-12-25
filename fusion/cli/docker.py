@@ -20,7 +20,7 @@ def DockerExecute(container, command, workingDirectory):
     dockerCmd.extend(command)
 
     print('Executing docker command: %s' % ' '.join(dockerCmd))
-    return Execute(dockerCmd, workingDirectory)
+    return Execute(dockerCmd, workingDirectory) == 0
 
 def RunAsContainer(args, command):
     commandArgs = ['/src/build/fusion-cli', command]
