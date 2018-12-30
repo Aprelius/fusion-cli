@@ -46,7 +46,8 @@ def RunAsContainer(args, command, container=None):
             commandArgs.append('--%s' % key)
 
     if hasattr(args, 'definitions'):
-        for definition in getattr(args, 'definitions', []):
+        definitions = getattr(args, 'definitions', [])
+        for definition in definitions or []:
             commandArgs.append('-D_%s' % definition)
 
     if not container:
