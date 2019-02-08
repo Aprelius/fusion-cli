@@ -36,6 +36,10 @@ def DefaultArgs(makeArgs, args):
             [key, value] = SplitDefintion(define)
             makeArgs.append(Definition(key.upper(), value))
 
+    makeArgs.append(
+        Definition('OPENSSL_DISABLE_SSL3', 'OFF', 'BOOL'))
+    makeArgs.append(
+        Definition('OPENSSL_ENABLE_DEPECATED_FEATURES', 'ON', 'BOOL'))
     return makeArgs
 
 
