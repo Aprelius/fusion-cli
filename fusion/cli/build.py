@@ -89,7 +89,7 @@ def RunBuild(args):
             raise InvalidRootPath()
 
     success = False
-    if platform.system() == 'Linux':
+    if platform.system() in ('Darwin', 'Linux'):
         success = GenerateGMakeProject(args)
     if not success:
         if isRefresh:
