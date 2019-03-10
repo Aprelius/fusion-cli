@@ -5,6 +5,8 @@ def DefaultArchitecture():
 def DefaultCompiler(system):
     if system == 'Linux':
         return 'gcc'
+    if system == 'Darwin':
+        return 'gcc'
     raise RuntimeError('Unknown platform: %s' % system)
 
 
