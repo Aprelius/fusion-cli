@@ -18,8 +18,9 @@ def DefaultArgs(makeArgs, args):
         toolchain = args.toolchain
         if not toolchain.endswith('.cmake'):
             toolchain += '.cmake'
-        makeArgs.append(Definition('CMAKE_TOOLCHAIN_FILE',
-            os.path.join(toolchainFolder, toolchain)))
+        if os.path.isfile(os.path.join(toolchainFolder, toolchain)):
+            makeArgs.append(Definition('CMAKE_TOOLCHAIN_FILE',
+                os.path.join(toolchainFolder, toolchain)))
 
     installFolder = os.path.join(os.getcwd(), GetInstallFolder())
     makeArgs.append(

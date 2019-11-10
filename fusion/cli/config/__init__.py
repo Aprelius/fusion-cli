@@ -7,6 +7,8 @@ def DefaultCompiler(system):
         return 'gcc'
     if system == 'Darwin':
         return 'gcc'
+    if system == 'Windows':
+        return 'vc150'
     raise RuntimeError('Unknown platform: %s' % system)
 
 
@@ -38,4 +40,4 @@ def GetSupportedVariants():
 
 
 def GetSupportedVisualStudioVersions():
-    return ['vs2013', 'vs2015', 'vs2017']
+    return ['vs2013', 'vs2015', 'vs2017', 'vs2019']

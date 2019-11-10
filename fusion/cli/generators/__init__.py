@@ -34,5 +34,5 @@ def RunGenerator(command, args, system):
     if command == 'xcode':
         return GenerateXCodeProject(args)
     if command in GetSupportedVisualStudioVersions():
-        return GenerateVSProject(command)
+        return GenerateVSProject(args)
     return False;
