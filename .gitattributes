@@ -1,0 +1,28 @@
+* text=auto
+
+# Source files
+*.cmake text eol=lf
+*.cpp text eol=lf
+*.h text eol=lf
+*.md text eol=crlf
+*.py text eol=lf
+*.txt text eol=lf
+
+# All project files that are needed on all platforms
+# should be LF by default when commited.
+.git* test eol=lf
+.editorconfig text eol=lf
+LICENSE text eol=lf
+
+# VS 20xx files
+*.sln text eol=crlf
+*.vcproj text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxproj.filters text eol=crlf
+
+# Other 'windows-specific' files
+*.bat text eol=crlf
+
+# Linuxy specific files
+*.sh text eol=lf
+
