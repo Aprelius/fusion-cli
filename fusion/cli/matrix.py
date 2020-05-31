@@ -1,4 +1,4 @@
-import ConfigParser
+import configparser
 import os
 from os.path import exists, join
 import platform
@@ -49,7 +49,7 @@ def SetupBuildMatrixCommand(commands):
     return command
 
 def ParseMatrixConfig(configFile):
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     with open(configFile, 'rb') as handle:
         config.readfp(handle)
 

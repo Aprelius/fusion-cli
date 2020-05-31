@@ -5,8 +5,10 @@ from .utilities import Call, Execute
 
 
 def DockerExecute(container, command, workingDirectory):
-    dockerCmd = ['docker', 'run', '-e', 'PYTHONUNBUFFERED=1', '--rm', '-v',
-        '%s:/src/build' % workingDirectory, '-w', '/src/build']
+    dockerCmd = ['docker', 'run', '-e', 'PYTHONUNBUFFERED=1',
+        '--rm', '--network', 'host',
+        '-v', '{}:/src/build'.format(workingDirectory),
+        '-w', '/src/build']
     if platform.system() != 'Windows':
         success, uid = Call(['id', '-u'])
         if not success:
@@ -15,15 +17,15 @@ def DockerExecute(container, command, workingDirectory):
         if not success:
             print('WARNING: Failed to retrieve active GID from system.')
         if gid and uid:
-            dockerCmd.extend(['-u', '%s:%s' % (uid, gid)])
+            dockerCmd.extend(['-u', '{}:{}'.format(uid, gid)])
     dockerCmd.append(container)
     dockerCmd.extend(command)
 
-    print('Executing docker command: %s' % ' '.join(dockerCmd))
+    print('Executing docker command: {}'.format(' '.join(dockerCmd)))
     return Execute(dockerCmd, workingDirectory) == 0
 
 def RunAsContainer(args, command, container=None):
-    commandArgs = ['/src/build/fusion-cli']
+    commandArgs = ['/src/build/contrib/fusion-cli/bin/fusion-cli']
 
     # The 'command' can be passed in either as a single string which
     # will be appended or as a list of arguments which get added to
@@ -41,14 +43,14 @@ def RunAsContainer(args, command, container=None):
         if key in allowed:
             if key == 'variant':
                 value = value.title()
-            commandArgs.append('--%s=%s' % (key, str(value)))
+            commandArgs.append('--{}={}'.format(key, str(value)))
         elif key in flags and value:
-            commandArgs.append('--%s' % key)
+            commandArgs.append('--{}'.format(key))
 
     if hasattr(args, 'definitions'):
         definitions = getattr(args, 'definitions', [])
         for definition in definitions or []:
-            commandArgs.append('-D_%s' % definition)
+            commandArgs.append('-D_{}'.format(definition))
 
     if not container:
         container = getattr(args, 'container', None)

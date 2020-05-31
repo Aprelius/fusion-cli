@@ -18,7 +18,7 @@ def Call(command):
         return False, ''
     except OSError:
         raise
-    return True, output.strip()
+    return True, output.strip().decode('utf-8')
 
 
 def Execute(command, workingDirectory):
@@ -32,7 +32,7 @@ def Execute(command, workingDirectory):
                 break
             for line in iter(process.stdout.readline, b''):
                 if len(line.strip()) > 0:
-                    print(line.strip())
+                    print(line.strip().decode('utf-8'))
     except KeyboardInterrupt:
         pass
     except OSError:
