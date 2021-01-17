@@ -45,23 +45,23 @@ def DefaultArgs(makeArgs, args):
 
 
 def Definition(variable, value, type=None):
-    return '-D%(variable)s:%(type)s=%(value)s' % dict(
-        variable=str(variable).upper(),
-        type=str(type or 'string').upper(),
-        value=str(value))
+    return '-D{}:{}={}'.format(
+        str(variable).upper(),
+        str(type or 'string').upper(),
+        str(value))
 
 
 def CMake(command, projectPath, executor):
     command.insert(0, 'cmake')
 
-    print('Using project folder: %s' % projectPath)
-    print('Executing CMake command: %s' % ' '.join(command))
+    print('Using project folder: {}'.format(projectPath))
+    print('Executing CMake command: {}'.format(' '.join(command)))
 
     returncode = executor(command, projectPath)
     if returncode == 0:
         return True
 
-    print('CMake run failed with result code: %s' % returncode)
+    print('CMake run failed with result code: {}'.format(returncode))
     return False
 
 

@@ -58,7 +58,7 @@ def GenerateVSProject(args):
     try:
         [_, version, year] = versions.get(args.command)
     except ValueError:
-        print("Unknown Visual Studio version: %s" % args.command)
+        print('Unknown Visual Studio version: {}'.format(args.command))
         return False
 
     if args.arm:
@@ -69,13 +69,13 @@ def GenerateVSProject(args):
     if version >= 16:
         cmakeArgs = DefaultArgs([
             '-G',
-            '"Visual Studio %s %s"' % (version, year),
+            '"Visual Studio {} {}"'.format(version, year),
             '-A', arch],
             args)
     else:
         cmakeArgs = DefaultArgs([
             '-G',
-            '"Visual Studio %s %s %s"' % (version, year, arch)],
+            '"Visual Studio {} {} {}"'.format(version, year, arch)],
             args)
     cmakeArgs.append(args.root)
 

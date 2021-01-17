@@ -19,7 +19,7 @@ def SetupProjectGenerators(commands, system):
     if system == 'Windows':
         for version in GetSupportedVisualStudioVersions():
             SetupVSProjectGenerator(commands, version,
-                help='Generate a Visual Studio %s solution set.' % version)
+                help='Generate a Visual Studio {} solution set.'.format(version))
     elif system == 'Darwin':
         SetupXCodeProjectGenerator(commands)
     if system in ('Linux', 'Darwin'):
@@ -35,4 +35,4 @@ def RunGenerator(command, args, system):
         return GenerateXCodeProject(args)
     if command in GetSupportedVisualStudioVersions():
         return GenerateVSProject(args)
-    return False;
+    return False

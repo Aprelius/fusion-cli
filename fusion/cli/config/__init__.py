@@ -9,7 +9,7 @@ def DefaultCompiler(system):
         return 'gcc'
     if system == 'Windows':
         return 'vc150'
-    raise RuntimeError('Unknown platform: %s' % system)
+    raise RuntimeError('Unknown platform: {}'.format(system))
 
 
 def DefaultVariant():

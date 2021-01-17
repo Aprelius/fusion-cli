@@ -18,7 +18,7 @@ def BaseProjectGenerator(commands, *args, **kwargs):
         metavar='<BUILD PATH>',
         default=buildFolder,
         help='Specify the build path for compiled artifacts.\n' \
-             'The default build path is: %s' % buildFolder)
+             'The default build path is: {}'.format(buildFolder))
 
     command.add_argument('--container', '-C', required=False,
         help='Target docker container to use for build if specified.')
@@ -30,7 +30,7 @@ def BaseProjectGenerator(commands, *args, **kwargs):
         default=installFolder,
         help='Specify the install path if the project should install ' \
              'results.\n' \
-             'The default install path is: %s' % installFolder)
+             'The default install path is: {}'.format(installFolder))
 
     projectFolder = os.path.join(os.getcwd(), GetProjectFolder())
     command.add_argument('--project-path', '-p',
@@ -38,7 +38,7 @@ def BaseProjectGenerator(commands, *args, **kwargs):
         metavar='<PROJECT PATH>',
         default=projectFolder,
         help='Specify the project path if the project should setup into.\n' \
-             'The default project path is: %s' % projectFolder)
+             'The default project path is: {}'.format(projectFolder))
 
     command.add_argument('-v', '--variant', dest='variant',
         default=DefaultVariant(),
@@ -47,7 +47,7 @@ def BaseProjectGenerator(commands, *args, **kwargs):
     command.add_argument('--toolchain', '-t', required=False,
         default=DefaultCompiler(platform.system()),
         help='Toolchain to build the project with.\n' \
-             'Default toolchain is: %s' % DefaultCompiler(platform.system()))
+             'Default toolchain is: {}'.format(DefaultCompiler(platform.system())))
 
     command.add_argument('--defintion', '-D_', dest='definitions', action='append',
         help='Add a definition which will be passed to the CMake generator.')

@@ -19,8 +19,8 @@ class MatrixValidationError(MatrixError):
 
 
 class ProjectNotInitialized(FusionCliException):
-    message = "Project path '%s' was not initialized."
+    message = "Project path '{}' was not initialized."
 
     def __init__(self, path, *a, **k):
         super(ProjectNotInitialized, self).__init__(
-            self.message % path, *a, **k)
+            self.message.format(path), *a, **k)

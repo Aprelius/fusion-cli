@@ -5,9 +5,14 @@ from .utilities import Call, Execute
 
 
 def DockerExecute(container, command, workingDirectory):
-    dockerCmd = ['docker', 'run', '-e', 'PYTHONUNBUFFERED=1',
-        '--rm', '--network', 'host',
-        '-v', '{}:/src/build'.format(workingDirectory),
+    dockerCmd = [
+        'docker',
+        'run',
+        '-e', 'PYTHONUNBUFFERED=1',
+        '--network=host',
+        '--rm',
+        '-v',
+        '{}:/src/build'.format(workingDirectory),
         '-w', '/src/build']
     if platform.system() != 'Windows':
         success, uid = Call(['id', '-u'])

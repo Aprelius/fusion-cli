@@ -14,11 +14,11 @@ def SetupGmakeProjectGenerator(commands):
 
 
 def ProjectPath(args, basePath=None):
-    projectPath = '%(platform)s-%(arch)s-%(toolchain)s-%(variant)s' % dict(
-        platform=str(platform.system()).lower(),
-        arch=args.arch,
-        toolchain=getattr(args, 'toolchain', 'unknown').lower(),
-        variant=str(args.variant).lower())
+    projectPath = '{}-{}-{}-{}'.format(
+        str(platform.system()).lower(),
+        args.arch,
+        getattr(args, 'toolchain', 'unknown').lower(),
+        str(args.variant).lower())
 
     if basePath is None:
         return projectPath

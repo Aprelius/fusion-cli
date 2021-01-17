@@ -7,7 +7,7 @@ def RunCreator(creator, args):
         return CreateExecutable(args)
     if creator == 'library':
         return CreateLibrary(args)
-    raise RuntimeError("Unknown creator '%s'" % creator)
+    raise RuntimeError("Unknown creator '{}'".format(creator))
 
 
 def SetupCreator(creator, commands):
@@ -15,4 +15,4 @@ def SetupCreator(creator, commands):
         return SetupExecutableCreator(commands)
     if creator == 'library':
         return SetupLibraryCreator(commands)
-    raise RuntimeError("Unknown creator '%s'" % creator)
+    raise RuntimeError("Unknown creator '{}'".format(creator))

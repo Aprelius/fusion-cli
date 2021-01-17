@@ -1,4 +1,4 @@
-import configparser
+import configparser as ConfigParser
 import os
 from os.path import exists, join
 import platform
@@ -23,8 +23,7 @@ class MatrixEntry(object):
 
     @property
     def name(self):
-        return '%s-%s-%s-%s' % (self.target, self.arch, self.toolchain,
-            self.variant)
+        return '{}-{}-{}-{}'.format(self.target, self.arch, self.toolchain, self.variant)
 
 def SetupBuildMatrixCommand(commands):
     command = commands.add_parser('build-matrix',
@@ -55,7 +54,7 @@ def ParseMatrixConfig(configFile):
 
     target = str(platform.system()).lower()
     if not config.has_section(target):
-        print('No matrix configuration for platform: %s' % target)
+        print('No matrix configuration for platform: {}'.format(target))
         return False
 
     arch = ValidateTarget(config, target, 'arch')
@@ -94,7 +93,7 @@ def ParseMatrixConfig(configFile):
 
 def RunBuildMatrix(args):
     if not exists(args.config):
-        print('Matrix configuration does not exists at: %s' % args.config)
+        print('Matrix configuration does not exists at: {}'.format(args.config))
         return False
 
     try:
@@ -112,22 +111,27 @@ def RunBuildMatrix(args):
     for identifier, entry in matrix:
         if not args.all and entry.priority > args.priority:
             continue
-        command = ['build', '--arch=%s' % entry.arch, '--variant=%s' % entry.variant.title(),
-            '--toolchain=%s' % entry.toolchain, '--concurrency=%d' % args.concurrency]
-        print('Building matrix entry: %s' % identifier)
+        command = [
+            'build',
+            '--arch={}'.format(entry.arch),
+            '--variant={}'.format(entry.variant.title()),
+            '--toolchain={}'.format(entry.toolchain),
+            '--concurrency={}'.format(args.concurrency)
+        ]
+        print('Building matrix entry: {}'.format(identifier))
         if args.verbose:
-            print('Executing with parameters: %s' % ' '.join(command))
+            print('Executing with parameters: {}'.format(' '.join(command)))
             if entry.container:
-                print('Using container: %s' % entry.container)
+                print('Using container: {}'.format(entry.container))
         if entry.container:
             if not RunAsContainer(parameters, command, entry.container):
-                print('Matrix build failed for target (container=%s): %s' % (
+                print('Matrix build failed for target (container={}): {}'.format(
                     entry.container, identifier))
                 return False
         else:
             command.insert(0, 'fusion-cli')
             if not Execute(command, os.getcwd()):
-                print('Matrix build failed for target: %s' % identifier)
+                print('Matrix build failed for target: {}'.format(identifier))
                 return False
 
     return True
@@ -135,12 +139,13 @@ def RunBuildMatrix(args):
 
 def ValidateTarget(config, target, option):
     if not config.has_option(target, option):
-        message = "Matrix configuration for '%s' does not specify: %s" % (target, option)
+        message = "Matrix configuration for '{}' does not specify: {}".format(
+            target, option)
         raise MatrixValidationError(message)
 
     values = config.get(target, option, True).strip()
     if not values:
-        print("Option list for '%s' on target '%s' is empty" % (option, target))
+        print("Option list for '{}' on target '{}' is empty".format(option, target))
         return False
 
     return values.split()

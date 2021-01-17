@@ -16,8 +16,7 @@ def SetupBuildCommand(commands):
     command.add_argument('--arch', '-a', required=False,
         choices=list(GetSupportedArchitectures().keys()),
         default=DefaultArchitecture(),
-        help='Specify the architecture to build. Default: %s' % \
-            DefaultArchitecture())
+        help='Specify the architecture to build. Default: {}'.format(DefaultArchitecture()))
 
     command.add_argument('--concurrency', '-c', type=int, default=1,
         required=False,
@@ -36,16 +35,16 @@ def SetupBuildCommand(commands):
         metavar='<PROJECT PATH>',
         default=projectFolder,
         help='Specify the project path if the project should setup into.\n' \
-             'The default project path is: %s' % projectFolder)
+             'The default project path is: {}'.format(projectFolder))
 
     command.add_argument('--variant', '-v', required=False,
         choices=list(GetSupportedVariants()),
         default=DefaultVariant(),
-        help='Specify the variant to build. Default: %s' % DefaultVariant())
+        help='Specify the variant to build. Default: {}'.format(DefaultVariant()))
     command.add_argument('--toolchain', '-t', required=False,
         default=DefaultCompiler(platform.system()),
         help='Toolchain to build the project with.\n' \
-             'Default toolchain is: %s' % DefaultCompiler(platform.system()))
+             'Default toolchain is: {}'.format(DefaultCompiler(platform.system())))
     command.add_argument('--verbose', action='store_true', default=False,
         help='Trigger verbose logging during the build process.')
 
@@ -57,14 +56,14 @@ def SetupBuildCommand(commands):
 def Make(command, projectPath, executor):
     command.insert(0, 'make')
 
-    print('Using project folder: %s' % projectPath)
-    print('Executing Make command: %s' % ' '.join(command))
+    print('Using project folder: {}'.format(projectPath))
+    print('Executing Make command: {}'.format(' '.join(command)))
 
     returncode = executor(command, projectPath)
     if returncode == 0:
         return True
 
-    print('Make run failed with result code: %s' % returncode)
+    print('Make run failed with result code: {}'.format(returncode))
     return False
 
 
@@ -97,7 +96,7 @@ def RunBuild(args):
             return False
         raise ProjectNotInitialized(projectPath)
 
-    makeArgs = ['-j%d' % args.concurrency]
+    makeArgs = [ '-j{}'.format(args.concurrency) ]
     if args.verbose:
         makeArgs.append('VERBOSE=1')
 

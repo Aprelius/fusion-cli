@@ -28,7 +28,7 @@ def CreateExecutableFolder(exePath, name):
     # Executable header template
     context = dict(exeName=name)
     content = RenderTemplate('executable/ExecutableHeader.template', **context)
-    fileName = os.path.join(headerPath, '%s.h' % name)
+    fileName = os.path.join(headerPath, '{}.h'.format(name))
     with open(fileName, 'wb') as handle:
         handle.write(content)
 
@@ -49,7 +49,7 @@ def CreateExecutableFolder(exePath, name):
 
 
 def CreateExecutable(args):
-    print('Creating executable: %s' % args.name)
+    print('Creating executable: {}'.format(args.name))
 
     fullPath = args.location
     if not os.path.isabs(args.location):
@@ -58,7 +58,7 @@ def CreateExecutable(args):
     if not os.path.exists(fullPath):
         os.makedirs(fullPath)
     elif os.path.exists(exePath):
-        print("Executable path '%s' already exists" % args.name)
+        print("Executable path '{}' already exists".format(args.name))
         return False
 
     # We write all of the output to a temporary directory. If for some
@@ -94,8 +94,8 @@ def CreateExecutable(args):
             content = handle.read()
         with open(cmakeParent, 'wb') as handle:
             handle.write(content.strip())
-            handle.write('\nadd_subdirectory(%s)\n' % args.name)
-        print("Successfully added '%s' to parent CMakeLists.txt" % args.name)
+            handle.write('\nadd_subdirectory({})\n'.format(args.name))
+        print("Successfully added '{}' to parent CMakeLists.txt".format(args.name))
 
     print('Successfully wrote project files.')
     return True

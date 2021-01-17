@@ -25,14 +25,14 @@ def Execute(command, workingDirectory):
     if platform.system() == 'Windows':
         command = ' '.join(command)
     try:
-        process = subprocess.Popen(command,
-            cwd=workingDirectory, stdout=subprocess.PIPE, bufsize=1)
-        while True:
-            if process.poll() is not None:
-                break
+        with subprocess.Popen(command,
+            cwd=workingDirectory,
+            stdout=subprocess.PIPE,
+            bufsize=0) as process:
             for line in iter(process.stdout.readline, b''):
-                if len(line.strip()) > 0:
-                    print(line.strip().decode('utf-8'))
+                data = str(line.strip(), encoding='utf-8')
+                if len(data) > 0:
+                    print(data)
     except KeyboardInterrupt:
         pass
     except OSError:
@@ -53,8 +53,8 @@ def RenderTemplate(template, **context):
 
 def ValidateRootPath(path):
     if not os.path.exists(path):
-        raise InvalidRootPath("Root path '%s' does not exist" % path)
+        raise InvalidRootPath("Root path '{}' does not exist".format(path))
     cmakeListsFile = os.path.join(path, 'CMakeLists.txt')
     if not os.path.isfile(cmakeListsFile):
-        raise InvalidRootPath("Root path '%s' does not conatin a " \
-            "CMakeLists.txt file")
+        raise InvalidRootPath("Root path '{}' does not conatin a " \
+            "CMakeLists.txt file".format(path))
